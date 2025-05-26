@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Sort Algorithm</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* --- Global Resets & Base Styles --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body { 
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f8f9fa; /* Lighter, cleaner background */
+            color: #343a40; /* Darker grey for text for better contrast */
+            line-height: 1.65; 
+            font-size: 16px;
+        }
+
+        /* --- Theme Colors --- */
+        :root {
+            --primary-color: #007bff; /* Bootstrap primary blue */
+            --primary-darker: #0056b3;
+            --secondary-color: #6c757d; /* Grey */
+            --light-bg: #ffffff;
+            --dark-text: #212529;
+            --light-text: #f8f9fa;
+            --border-color: #dee2e6;
+            --accent-color-1: #17a2b8; /* Teal/Cyan */
+            --accent-color-2: #28a745; /* Green */
+            --warning-color: #ffc107; /* Yellow */
+            --highlight-bg: #e9ecef; /* Light grey for highlighting sections */
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--primary-darker);
+            font-weight: 600;
+            margin-bottom: 0.75em;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2.4em; text-align: center; margin-bottom: 1em;}
+        h2 { font-size: 1.9em; border-bottom: 3px solid var(--primary-color); padding-bottom: 0.4em; margin-top: 1.8em;}
+        h3 { font-size: 1.5em; color: var(--primary-color); }
+        p { margin-bottom: 1.2em; }
+        ul { margin-bottom: 1.2em; padding-left: 20px; }
+        li { margin-bottom: 0.5em; }
+        a { color: var(--primary-color); text-decoration: none; }
+        a:hover { color: var(--primary-darker); text-decoration: underline; }
+
+        /* --- Header, Nav, Footer --- */
+        header { 
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-darker) 100%); 
+            color: var(--light-text); 
+            padding: 1.8rem 1rem; 
+            text-align: center; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header h1 { color: var(--light-text); border-bottom: none; margin-bottom: 0.2em;}
+
+        .sub-nav { 
+            background: var(--primary-darker); 
+            padding: 0.8rem; 
+            text-align: center; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+        }
+        .sub-nav a { 
+            color: rgba(255,255,255,0.9); 
+            margin: 0 1.5rem; 
+            font-weight: 500; 
+            font-size: 1.05em; 
+            transition: color 0.2s ease;
+        }
+        .sub-nav a:hover { color: #ffffff; text-decoration: none; }
+
+        footer { 
+            background-color: #343a40; /* Dark footer */
+            color: var(--light-text); 
+            padding: 2rem 1rem; 
+            text-align: center; 
+            margin-top: 3rem;
+        }
+        .footer-note { font-size: 0.9em; color: #adb5bd; }
+
+
+        /* --- Container & Sections --- */
+        .container { 
+            width: 90%; 
+            max-width: 1000px; /* Slightly wider */
+            margin: 30px auto; 
+            background: var(--light-bg); 
+            border-radius: 12px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08); 
+            padding: 2rem 2.5rem; 
+        }
+        section { margin-bottom: 2.5rem; }
+        section:last-child { margin-bottom: 0; }
+
+        pre { 
+            background: #2b3035; /* Darker, less saturated */
+            color: #d8dee9; /* Light grey text for code */
+            padding: 1.2em 1.5em; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace; 
+            font-size: 0.98em; 
+            line-height: 1.5;
+            border: 1px solid #454c52;
+        }
+
+        /* --- Visualization Specific Styles - REFINED --- */
+        .visualization-container { 
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f8f9fa; /* Light background */
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .controls { 
+            display: flex; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 15px 20px; 
+            margin-bottom: 25px; 
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .control-group { display: flex; align-items: center; gap: 10px; }
+        .controls label { font-weight: 500; color: var(--dark-text); font-size: 1em; }
+        .controls input[type="text"] { 
+            padding: 10px 14px; 
+            border: 1px solid #ced4da; 
+            border-radius: 6px; 
+            font-size: 1em;
+            min-width: 220px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .controls input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            outline: none;
+        }
+        .controls input[type="range"] { 
+            cursor: pointer; 
+            flex-grow: 1; 
+            max-width: 200px;
+            accent-color: var(--primary-color); /* Modern way to style range slider thumb */
+        }
+        .controls button { 
+            background-color: var(--primary-color); 
+            color: var(--light-text); 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 1em;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .controls button:hover { background-color: var(--primary-darker); transform: translateY(-1px); }
+        .controls button:active { transform: translateY(0); }
+        .controls button:disabled { background-color: var(--secondary-color); cursor: not-allowed; transform: translateY(0);}
+        .controls button#randomize-button-merge { background-color: var(--accent-color-2); }
+        .controls button#randomize-button-merge:hover { background-color: #1e7e34; }
+        .controls button#reset-button-merge { background-color: var(--secondary-color); }
+        .controls button#reset-button-merge:hover { background-color: #545b62; }
+
+
+        #main-visualization-area {
+            display: flex;
+            align-items: flex-end; 
+            justify-content: center;
+            min-height: 280px; 
+            padding: 20px;
+            border: 1px solid var(--border-color); 
+            background-color: #ffffff; 
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow-x: auto; 
+            background-image: 
+                linear-gradient(to right, #eef2f7 1px, transparent 1px),
+                linear-gradient(to bottom, #eef2f7 1px, transparent 1px);
+            background-size: 20px 20px; /* Grid lines */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.03);
+        }
+        .bar {
+            background-color: var(--accent-color-1); /* Teal as default */
+            color: var(--light-text); 
+            text-align: center;
+            padding-top: 7px; 
+            border-radius: 6px 6px 0 0;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: height 0.3s ease, background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease, box-shadow 0.2s ease;
+            font-size: 0.95em;
+            font-weight: 600; 
+            margin: 0 3px; 
+            min-width: 30px; 
+            box-sizing: border-box;
+            opacity: 0.9; 
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        .bar.active { 
+            opacity: 1;
+            box-shadow: 0 0 12px rgba(0,123,255,0.5); 
+            transform: translateY(-4px) scale(1.02); 
+        }
+        .bar.dividing-segment { 
+            background-color: var(--warning-color); /* Yellow */
+            border-color: #d39e00;
+            color: var(--dark-text);
+        }
+        .bar.merging-source-left { 
+            background-color: #64b5f6; /* Lighter Blue */
+            border-color: #2286c3;
+        }
+        .bar.merging-source-right { 
+            background-color: #81c784; /* Light Green (kept) */
+            border-color: #519657;
+        }
+        .bar.just-placed { 
+            background-color: #7e57c2; /* Deep Purple */
+            border-color: #4d2c91;
+            transform: scale(1.15) translateY(-4px); 
+        }
+        .bar.sorted-in-segment { 
+            background-color: #90a4ae; /* Blue Grey (kept) */
+            border-color: #62757f;
+            opacity: 0.95;
+        }
+        .bar.final-sorted { 
+            background-color: var(--accent-color-2); /* Green for final sorted */
+            border-color: #1e7e34;
+            opacity: 1;
+        }
+
+        #aux-visualization-area {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid var(--border-color); 
+            border-radius: 8px;
+            background-color: #ffffff; 
+            min-height: 120px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        #aux-visualization-area p { 
+            margin: 0 0 15px 0; 
+            font-weight: 600; 
+            color: var(--primary-darker);
+            font-size: 1.2em;
+        }
+        #aux-visualization-area div { 
+            margin-bottom: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 1.1em;
+            color: #495057;
+        }
+        .sub-array-label { font-weight: bold; color: var(--dark-text); }
+
+
+        #steps-log {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            border-radius: 8px;
+            max-height: 300px; 
+            overflow-y: auto;
+            font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        #steps-log div { 
+            padding: 5px 8px;
+            border-bottom: 1px solid #f1f3f5; /* Lighter border for log items */
+        }
+        #steps-log div:last-child { border-bottom: none; }
+        #steps-log b { color: var(--primary-color); }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-code-branch"></i> Merge Sort</h1>
+        <p>Efficient, stable, divide-and-conquer sorting algorithm</p>
+    </header>
+    <nav class="sub-nav">
+        <a href="../index.html#popular-algorithms"><i class="fas fa-arrow-left"></i> Back to Popular Algorithms</a>
+        <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+    </nav>
+    <div class="container">
+        <section>
+            <h2 class="section-title"><i class="fas fa-lightbulb"></i> Concept</h2>
+            <p>Merge Sort is an efficient, comparison-based, divide and conquer sorting algorithm. It works by recursively dividing the input array into two halves, calling itself for the two halves, and then merging the two sorted halves.</p>
+            <p>The <code>merge()</code> function is used for merging two halves. The <code>merge(arr, l, m, r)</code> is a key process that assumes that <code>arr[l..m]</code> and <code>arr[m+1..r]</code> are sorted and merges the two sorted sub-arrays into one.</p>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-list-ol"></i> Characteristics</h2>
+            <ul>
+                <li><strong>Time Complexity:</strong>
+                    <ul>
+                        <li>Worst-case: O(n log n)</li>
+                        <li>Average-case: O(n log n)</li>
+                        <li>Best-case: O(n log n)</li>
+                    </ul>
+                </li>
+                <li><strong>Space Complexity:</strong> O(n) (due to the temporary arrays used for merging)</li>
+                <li><strong>Stability:</strong> Stable (if implemented carefully)</li>
+                <li>Efficient for large datasets and widely used.</li>
+            </ul>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-code"></i> Code Example (C++)</h2>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::inplace_merge or manual merge
+
+// Function to merge two subarrays of arr[]
+// First subarray is arr[left..mid]
+// Second subarray is arr[mid+1..right]
+void merge(std::vector&lt;int&gt;& arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    // Create temp arrays
+    std::vector&lt;int&gt; L(n1), R(n2);
+
+    // Copy data to temp arrays L[] and R[]
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    // Merge the temp arrays back into arr[left..right]
+    int i = 0; // Initial index of first subarray
+    int j = 0; // Initial index of second subarray
+    int k = left; // Initial index of merged subarray
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy the remaining elements of L[], if there are any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Copy the remaining elements of R[], if there are any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+// Main function that sorts arr[left..right] using merge()
+void mergeSort(std::vector&lt;int&gt;& arr, int left, int right) {
+    if (left < right) {
+        // Same as (left+right)/2, but avoids overflow for large left and h
+        int mid = left + (right - left) / 2;
+
+        // Sort first and second halves
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        merge(arr, left, mid, right);
+    }
+}
+
+// Helper function to print the vector
+void printVector(const std::vector&lt;int&gt;& arr) {
+    for (int x : arr) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector&lt;int&gt; data = {38, 27, 43, 3, 9, 82, 10};
+    std::cout << "Unsorted array: ";
+    printVector(data);
+
+    mergeSort(data, 0, data.size() - 1);
+
+    std::cout << "Sorted array: ";
+    printVector(data);
+
+    return 0;
+}
+// To compile and run (e.g., with g++):
+// g++ your_file_name.cpp -o merge_sort_cpp
+// ./merge_sort_cpp
+</code></pre>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fab fa-python"></i> Code Example (Python)</h2>
+            <pre><code class="language-python">def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2  # Finding the mid of the array
+        L = arr[:mid]      # Dividing the array elements into 2 halves
+        R = arr[mid:]
+
+        merge_sort(L)      # Sorting the first half
+        merge_sort(R)      # Sorting the second half
+
+        i = j = k = 0
+
+        # Copy data to temp arrays L[] and R[]
+        while i < len(L) and j < len(R):
+            if L[i] < R[j]:
+                arr[k] = L[i]
+                i += 1
+            else:
+                arr[k] = R[j]
+                j += 1
+            k += 1
+
+        # Checking if any element was left
+        while i < len(L):
+            arr[k] = L[i]
+            i += 1
+            k += 1
+
+        while j < len(R):
+            arr[k] = R[j]
+            j += 1
+            k += 1
+    return arr
+
+# Example usage:
+if __name__ == "__main__":
+    unsorted_array = [38, 27, 43, 3, 9, 82, 10]
+    print("Unsorted array:", unsorted_array)
+    # Create a copy to sort, to keep original if needed
+    sorted_array = merge_sort(list(unsorted_array)) 
+    print("Sorted array:", sorted_array)
+
+    unsorted_array_2 = [12, 11, 13, 5, 6, 7]
+    print("Unsorted array 2:", unsorted_array_2)
+    sorted_array_2 = merge_sort(list(unsorted_array_2))
+    print("Sorted array 2:", sorted_array_2)
+
+# To run:
+# python your_file_name.py
+</code></pre>
+        </section>
+        <section class="visualization-container">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i> Visualization (Dynamic Input)</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="array-input-merge">Array:</label>
+                    <input type="text" id="array-input-merge" value="38,27,43,3,9,82,10" aria-label="Array input for merge sort">
+                </div>
+                <div class="control-group">
+                    <label for="speed-control-merge">Speed:</label>
+                    <input type="range" id="speed-control-merge" min="100" max="2000" value="500" step="100" aria-label="Animation speed control">
+                </div>
+                <button id="sort-button-merge">Sort</button>
+                <button id="randomize-button-merge">Randomize</button>
+                <button id="reset-button-merge">Reset</button>
+            </div>
+            <div id="main-visualization-area">
+                <!-- Main array bars will be generated here by JavaScript -->
+            </div>
+            <div id="aux-visualization-area">
+                <p>Current operation: (e.g., Splitting array, Merging sub-arrays)</p>
+                <!-- Details about sub-arrays or merging steps can appear here -->
+            </div>
+            <div id="steps-log">
+                <!-- Log of sorting steps will appear here -->
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; <span id="year-merge"></span> Algorithms & Design Patterns Guide</p>
+        <p class="footer-note">Merge Sort Page</p>
+    </footer>
+    <script src="../scripts/merge-sort-viz.js"></script>
+    <script>
+        document.getElementById('year-merge').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

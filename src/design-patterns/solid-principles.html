@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLID Principles</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-cubes"></i> SOLID Principles</h1>
+        <p>Five essential object-oriented design principles for maintainable and scalable software</p>
+    </header>
+    <nav class="sub-nav">
+        <a href="../index.html#design-patterns"><i class="fas fa-arrow-left"></i> Back to Design Patterns</a>
+        <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+    </nav>
+    <div class="container">
+        <section>
+            <h2 class="section-title"><i class="fas fa-list-ol"></i> What are the SOLID Principles?</h2>
+            <ul>
+                <li><strong>S</strong> - <b>Single Responsibility Principle</b> (SRP): A class should have only one reason to change.</li>
+                <li><strong>O</strong> - <b>Open/Closed Principle</b> (OCP): Software entities should be open for extension, but closed for modification.</li>
+                <li><strong>L</strong> - <b>Liskov Substitution Principle</b> (LSP): Subtypes must be substitutable for their base types.</li>
+                <li><strong>I</strong> - <b>Interface Segregation Principle</b> (ISP): No client should be forced to depend on methods it does not use.</li>
+                <li><strong>D</strong> - <b>Dependency Inversion Principle</b> (DIP): Depend on abstractions, not on concretions.</li>
+            </ul>
+        </section>
+
+        <!-- SRP -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-user"></i> Single Responsibility Principle (SRP)</h2>
+            <div class="visualization-container" style="display:flex;flex-wrap:wrap;gap:2em;justify-content:center;">
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-file-alt"></i> Report</h3>
+                    <ul>
+                        <li>title</li>
+                        <li>content</li>
+                    </ul>
+                </div>
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-print"></i> ReportPrinter</h3>
+                    <ul>
+                        <li>print_report(report)</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:1em;">
+                <i class="fas fa-arrow-right"></i> <b>Each class has a single responsibility.</b>
+            </p>
+            <h3><i class="fab fa-python"></i> Python Example</h3>
+            <pre><code class="language-python">class Report:
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content
+
+class ReportPrinter:
+    def print_report(self, report: Report):
+        print(f"Title: {report.title}")
+        print(f"Content: {report.content}")
+</code></pre>
+            <h3><i class="fab fa-cuttlefish"></i> C++ Example</h3>
+            <pre><code class="language-cpp">class Report {
+public:
+    std::string title;
+    std::string content;
+    Report(const std::string& t, const std::string& c) : title(t), content(c) {}
+};
+
+class ReportPrinter {
+public:
+    void printReport(const Report& report) {
+        std::cout << "Title: " << report.title << std::endl;
+        std::cout << "Content: " << report.content << std::endl;
+    }
+};
+</code></pre>
+        </section>
+
+        <!-- OCP -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-plug"></i> Open/Closed Principle (OCP)</h2>
+            <div class="visualization-container" style="display:flex;flex-wrap:wrap;gap:2em;justify-content:center;">
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-file-export"></i> ReportExporter</h3>
+                    <ul>
+                        <li>export(report)</li>
+                        <li>
+                            <i class="fas fa-arrow-down"></i>
+                            <b>PDFExporter</b>
+                        </li>
+                        <li>
+                            <i class="fas fa-arrow-down"></i>
+                            <b>HTMLExporter</b>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:1em;">
+                <i class="fas fa-arrow-right"></i> <b>Add new exporters without modifying existing code.</b>
+            </p>
+            <h3><i class="fab fa-python"></i> Python Example</h3>
+            <pre><code class="language-python">class ReportExporter:
+    def export(self, report):
+        raise NotImplementedError
+
+class PDFExporter(ReportExporter):
+    def export(self, report):
+        print(f"Exporting '{report.title}' as PDF...")
+
+class HTMLExporter(ReportExporter):
+    def export(self, report):
+        print(f"Exporting '{report.title}' as HTML...")
+</code></pre>
+            <h3><i class="fab fa-cuttlefish"></i> C++ Example</h3>
+            <pre><code class="language-cpp">class ReportExporter {
+public:
+    virtual void exportReport(const Report& report) = 0;
+    virtual ~ReportExporter() = default;
+};
+
+class PDFExporter : public ReportExporter {
+public:
+    void exportReport(const Report& report) override {
+        std::cout << "Exporting '" << report.title << "' as PDF..." << std::endl;
+    }
+};
+
+class HTMLExporter : public ReportExporter {
+public:
+    void exportReport(const Report& report) override {
+        std::cout << "Exporting '" << report.title << "' as HTML..." << std::endl;
+    }
+};
+</code></pre>
+        </section>
+
+        <!-- LSP -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Liskov Substitution Principle (LSP)</h2>
+            <div class="visualization-container" style="display:flex;flex-wrap:wrap;gap:2em;justify-content:center;">
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-shapes"></i> Bird (Base)</h3>
+                    <ul>
+                        <li>fly()</li>
+                    </ul>
+                </div>
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-dove"></i> Sparrow (Derived)</h3>
+                    <ul>
+                        <li>fly()</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:1em;">
+                <i class="fas fa-arrow-right"></i> <b>Subtypes can replace base types without breaking the program.</b>
+            </p>
+            <h3><i class="fab fa-python"></i> Python Example</h3>
+            <pre><code class="language-python">class Bird:
+    def fly(self):
+        print("Bird is flying")
+
+class Sparrow(Bird):
+    def fly(self):
+        print("Sparrow is flying")
+
+def make_bird_fly(bird: Bird):
+    bird.fly()
+
+make_bird_fly(Sparrow())  # Output: Sparrow is flying
+</code></pre>
+            <h3><i class="fab fa-cuttlefish"></i> C++ Example</h3>
+            <pre><code class="language-cpp">class Bird {
+public:
+    virtual void fly() const {
+        std::cout << "Bird is flying" << std::endl;
+    }
+    virtual ~Bird() = default;
+};
+
+class Sparrow : public Bird {
+public:
+    void fly() const override {
+        std::cout << "Sparrow is flying" << std::endl;
+    }
+};
+
+void makeBirdFly(const Bird& bird) {
+    bird.fly();
+}
+
+// Usage:
+// Sparrow sparrow;
+// makeBirdFly(sparrow); // Output: Sparrow is flying
+</code></pre>
+        </section>
+
+        <!-- ISP -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-filter"></i> Interface Segregation Principle (ISP)</h2>
+            <div class="visualization-container" style="display:flex;flex-wrap:wrap;gap:2em;justify-content:center;">
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-print"></i> Printable</h3>
+                    <ul>
+                        <li>print()</li>
+                    </ul>
+                </div>
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-save"></i> Saveable</h3>
+                    <ul>
+                        <li>save()</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:1em;">
+                <i class="fas fa-arrow-right"></i> <b>Clients only depend on interfaces they use.</b>
+            </p>
+            <h3><i class="fab fa-python"></i> Python Example</h3>
+            <pre><code class="language-python">class Printable:
+    def print(self):
+        raise NotImplementedError
+
+class Saveable:
+    def save(self):
+        raise NotImplementedError
+
+class Document(Printable, Saveable):
+    def print(self):
+        print("Printing document...")
+
+    def save(self):
+        print("Saving document...")
+</code></pre>
+            <h3><i class="fab fa-cuttlefish"></i> C++ Example</h3>
+            <pre><code class="language-cpp">class Printable {
+public:
+    virtual void print() const = 0;
+    virtual ~Printable() = default;
+};
+
+class Saveable {
+public:
+    virtual void save() const = 0;
+    virtual ~Saveable() = default;
+};
+
+class Document : public Printable, public Saveable {
+public:
+    void print() const override {
+        std::cout << "Printing document..." << std::endl;
+    }
+    void save() const override {
+        std::cout << "Saving document..." << std::endl;
+    }
+};
+</code></pre>
+        </section>
+
+        <!-- DIP -->
+        <section>
+            <h2 class="section-title"><i class="fas fa-random"></i> Dependency Inversion Principle (DIP)</h2>
+            <div class="visualization-container" style="display:flex;flex-wrap:wrap;gap:2em;justify-content:center;">
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-database"></i> Database (Abstraction)</h3>
+                    <ul>
+                        <li>connect()</li>
+                    </ul>
+                </div>
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-server"></i> MySQLDatabase (Concrete)</h3>
+                    <ul>
+                        <li>connect()</li>
+                    </ul>
+                </div>
+                <div style="flex:1 1 220px;min-width:220px;max-width:320px;background:#e9ecef;border-radius:10px;padding:1em;">
+                    <h3 style="margin-top:0;"><i class="fas fa-cogs"></i> AppService</h3>
+                    <ul>
+                        <li>Uses Database abstraction</li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:1em;">
+                <i class="fas fa-arrow-right"></i> <b>High-level modules depend on abstractions, not concretions.</b>
+            </p>
+            <h3><i class="fab fa-python"></i> Python Example</h3>
+            <pre><code class="language-python">class Database:
+    def connect(self):
+        raise NotImplementedError
+
+class MySQLDatabase(Database):
+    def connect(self):
+        print("Connecting to MySQL database...")
+
+class AppService:
+    def __init__(self, db: Database):
+        self.db = db
+
+    def start(self):
+        self.db.connect()
+
+# Usage
+db = MySQLDatabase()
+service = AppService(db)
+service.start()
+</code></pre>
+            <h3><i class="fab fa-cuttlefish"></i> C++ Example</h3>
+            <pre><code class="language-cpp">class Database {
+public:
+    virtual void connect() const = 0;
+    virtual ~Database() = default;
+};
+
+class MySQLDatabase : public Database {
+public:
+    void connect() const override {
+        std::cout << "Connecting to MySQL database..." << std::endl;
+    }
+};
+
+class AppService {
+    const Database& db;
+public:
+    AppService(const Database& database) : db(database) {}
+    void start() const {
+        db.connect();
+    }
+};
+
+// Usage:
+// MySQLDatabase db;
+// AppService service(db);
+// service.start();
+</code></pre>
+        </section>
+
+        <section>
+            <h2 class="section-title"><i class="fas fa-book"></i> Summary Table</h2>
+            <table style="width:100%;border-collapse:collapse;background:#f8f9fa;">
+                <thead>
+                    <tr style="background:#007bff;color:#fff;">
+                        <th style="padding:0.5em;">Principle</th>
+                        <th style="padding:0.5em;">Description</th>
+                        <th style="padding:0.5em;">Mnemonic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SRP</td>
+                        <td>A class should have only one reason to change.</td>
+                        <td>One job per class</td>
+                    </tr>
+                    <tr>
+                        <td>OCP</td>
+                        <td>Open for extension, closed for modification.</td>
+                        <td>Plug in new features</td>
+                    </tr>
+                    <tr>
+                        <td>LSP</td>
+                        <td>Subtypes must be substitutable for their base types.</td>
+                        <td>Replaceable children</td>
+                    </tr>
+                    <tr>
+                        <td>ISP</td>
+                        <td>No client should depend on methods it does not use.</td>
+                        <td>Small, focused interfaces</td>
+                    </tr>
+                    <tr>
+                        <td>DIP</td>
+                        <td>Depend on abstractions, not concretions.</td>
+                        <td>Use interfaces, not concrete classes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; <span id="year-solid"></span> Algorithms & Design Patterns Guide</p>
+        <p class="footer-note">SOLID Principles Page</p>
+    </footer>
+    <script>
+        document.getElementById('year-solid').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

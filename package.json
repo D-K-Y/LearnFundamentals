@@ -1,0 +1,17 @@
+{
+  "name": "algorithms-design-patterns-website",
+  "version": "1.0.0",
+  "description": "A website dedicated to algorithms and design patterns.",
+  "main": "src/index.html",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build step not defined'",
+    "test": "echo 'Test step not defined'"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

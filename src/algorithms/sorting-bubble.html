@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Sort Algorithm</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Nunito', sans-serif; background-color: #f4f7fa; color: #333; margin: 0; padding: 0; }
+        header { background-color: #007bff; color: white; padding: 1.5rem 0; text-align: center; border-bottom: 4px solid #0056b3; }
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { margin: 0.5rem 0 0; font-size: 1.2rem; }
+        nav.sub-nav { background: #0056b3; padding: 0.5rem 0; text-align: center; }
+        nav.sub-nav a { color: #fff; margin: 0 1rem; text-decoration: none; font-weight: bold; }
+        nav.sub-nav a:hover { text-decoration: underline; }
+        .container { width: 90%; max-width: 900px; margin: 20px auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 2rem; }
+        h2 { color: #007bff; font-size: 1.8rem; border-bottom: 2px solid #e9ecef; padding-bottom: 0.5rem; }
+        pre { background: #222; color: #fff; padding: 0.7em 1em; border-radius: 5px; overflow-x: auto; }
+        .visualization-area { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background: #f0f0f0; min-height: 100px; display: flex; align-items: flex-end; gap: 5px; }
+        .bar { background-color: #007bff; color: white; text-align: center; padding: 5px; border-radius: 3px; transition: height 0.3s ease, background-color 0.3s ease; font-size: 0.8em; }
+        .bar.swapping { background-color: #e8491d; } /* Highlight swapping bars */
+        .bar.sorted { background-color: #28a745; } /* Highlight sorted bars */
+        .controls input[type="text"] { padding: 8px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .controls button { background: #007bff; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; }
+        .controls button:hover { background: #0056b3; }
+        .footer-note { font-size: 0.85rem; color: #bbb; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-circle-nodes"></i> Bubble Sort</h1>
+        <p>Simple, stable, comparison-based sorting algorithm</p>
+    </header>
+    <nav class="sub-nav">
+        <a href="../index.html#popular-algorithms"><i class="fas fa-arrow-left"></i> Back to Popular Algorithms</a>
+        <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+    </nav>
+    <div class="container">
+        <section>
+            <h2 class="section-title">Concept</h2>
+            <p>Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. The pass through the list is repeated until no swaps are needed, which indicates that the list is sorted.</p>
+            <p>It gets its name because smaller elements "bubble" to the top of the list with each pass.</p>
+        </section>
+        <section>
+            <h2 class="section-title">Characteristics</h2>
+            <ul>
+                <li><strong>Time Complexity:</strong>
+                    <ul>
+                        <li>Worst-case: O(n²)</li>
+                        <li>Average-case: O(n²)</li>
+                        <li>Best-case (already sorted): O(n) (with optimization)</li>
+                    </ul>
+                </li>
+                <li><strong>Space Complexity:</strong> O(1) (in-place)</li>
+                <li><strong>Stability:</strong> Stable</li>
+                <li>Not efficient for large datasets.</li>
+            </ul>
+        </section>
+        <section>
+            <h2 class="section-title">Code Example (C++)</h2>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt; // For std::swap
+
+// Function to perform bubble sort
+void bubbleSort(std::vector&lt;int&gt;& arr) {
+    int n = arr.size();
+    bool swapped;
+    for (int i = 0; i &lt; n - 1; i++) {
+        swapped = false;
+        for (int j = 0; j &lt; n - 1 - i; j++) {
+            if (arr[j] &gt; arr[j + 1]) {
+                std::swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+        // If no two elements were swapped by inner loop, then break
+        if (!swapped) {
+            break;
+        }
+    }
+}
+
+// Helper function to print the vector
+void printVector(const std::vector&lt;int&gt;& arr) {
+    for (int x : arr) {
+        std::cout &lt;&lt; x &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
+}
+
+int main() {
+    std::vector&lt;int&gt; data = {64, 34, 25, 12, 22, 11, 90};
+    std::cout &lt;&lt; "Unsorted array: ";
+    printVector(data);
+
+    bubbleSort(data);
+
+    std::cout &lt;&lt; "Sorted array: ";
+    printVector(data); // Should print the sorted array
+
+    std::vector&lt;int&gt; data2 = {5, 1, 4, 2, 8};
+    std::cout &lt;&lt; "Unsorted array 2: ";
+    printVector(data2);
+    bubbleSort(data2);
+    std::cout &lt;&lt; "Sorted array 2: ";
+    printVector(data2);
+
+
+    return 0;
+}
+// To compile and run (e.g., with g++):
+// g++ your_file_name.cpp -o bubble_sort_cpp
+// ./bubble_sort_cpp
+</code></pre>
+        </section>
+        <section>
+            <h2 class="section-title">Code Example (Python)</h2>
+            <pre><code class="language-python">def bubble_sort(arr):
+    n = len(arr)
+    # Traverse through all array elements
+    for i in range(n - 1):
+        # Last i elements are already in place
+        swapped = False
+        for j in range(0, n - 1 - i):
+            # Traverse the array from 0 to n-i-1
+            # Swap if the element found is greater
+            # than the next element
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        # If no two elements were swapped by inner loop, then break
+        if not swapped:
+            break
+    return arr
+
+# Example usage:
+if __name__ == "__main__":
+    unsorted_array = [64, 34, 25, 12, 22, 11, 90]
+    print("Unsorted array:", unsorted_array)
+    sorted_array = bubble_sort(list(unsorted_array)) # Pass a copy if you want to keep original
+    print("Sorted array:", sorted_array)
+
+    unsorted_array_2 = [5, 1, 4, 2, 8]
+    print("Unsorted array 2:", unsorted_array_2)
+    sorted_array_2 = bubble_sort(list(unsorted_array_2))
+    print("Sorted array 2:", sorted_array_2)
+
+# To run:
+# python your_file_name.py
+</code></pre>
+        </section>
+        <section>
+            <h2 class="section-title">Visualization (Dynamic Input)</h2>
+            <div class="controls">
+                <label for="array-input">Enter numbers (comma-separated):</label>
+                <input type="text" id="array-input" value="5,1,4,2,8">
+                <button id="sort-button">Sort</button>
+                <button id="reset-button">Reset</button>
+            </div>
+            <div id="visualization-area" class="visualization-area">
+                <!-- Bars will be generated here by JavaScript -->
+            </div>
+            <div id="steps-log">
+                <!-- Log of steps will appear here -->
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; <span id="year-bubble"></span> Algorithms & Design Patterns Guide</p>
+         <p class="footer-note">Bubble Sort Page</p>
+    </footer>
+    <script src="../scripts/bubble-sort-viz.js"></script>
+    <script>
+        document.getElementById('year-bubble').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

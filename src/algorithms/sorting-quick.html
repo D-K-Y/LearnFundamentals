@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Sort Algorithm</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-bolt"></i> Quick Sort</h1>
+        <p>Efficient, in-place, divide-and-conquer sorting algorithm</p>
+    </header>
+    <nav class="sub-nav">
+        <a href="../index.html#popular-algorithms"><i class="fas fa-arrow-left"></i> Back to Popular Algorithms</a>
+        <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+    </nav>
+    <div class="container">
+        <section>
+            <h2 class="section-title"><i class="fas fa-lightbulb"></i> Concept</h2>
+            <p>Quick Sort is an efficient, comparison-based sorting algorithm that uses a divide-and-conquer approach. It works by selecting a 'pivot' element from the array and partitioning the other elements into two sub-arrays, according to whether they are less than or greater than the pivot. The sub-arrays are then sorted recursively.</p>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-list-ol"></i> Characteristics</h2>
+            <ul>
+                <li><strong>Time Complexity:</strong>
+                    <ul>
+                        <li>Worst-case: O(n<sup>2</sup>)</li>
+                        <li>Average-case: O(n log n)</li>
+                        <li>Best-case: O(n log n)</li>
+                    </ul>
+                </li>
+                <li><strong>Space Complexity:</strong> O(log n) (due to the call stack)</li>
+                <li><strong>Stability:</strong> Not stable (can be implemented as stable with extra space)</li>
+                <li>In-place sorting algorithm (minimal extra memory required).</li>
+            </ul>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-code"></i> Code Example (C++)</h2>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+// Function to partition the array
+int partition(std::vector&lt;int&gt;& arr, int low, int high) {
+    int pivot = arr[high]; // Choose the rightmost element as the pivot
+    int i = (low - 1); // Index of smaller element
+
+    for (int j = low; j <= high - 1; j++) {
+        // If the current element is smaller than or equal to the pivot
+        if (arr[j] <= pivot) {
+            i++; // Increment index of smaller element
+            std::swap(arr[i], arr[j]);
+        }
+    }
+    std::swap(arr[i + 1], arr[high]);
+    return (i + 1);
+}
+
+// Quick Sort function
+void quickSort(std::vector&lt;int&gt;& arr, int low, int high) {
+    if (low < high) {
+        // pi is partitioning index, arr[pi] is now at right place
+        int pi = partition(arr, low, high);
+
+        // Separately sort elements before partition and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Helper function to print the vector
+void printVector(const std::vector&lt;int&gt;& arr) {
+    for (int x : arr) {
+        std::cout << x << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::vector&lt;int&gt; data = {10, 7, 8, 9, 1, 5};
+    std::cout << "Unsorted array: ";
+    printVector(data);
+
+    quickSort(data, 0, data.size() - 1);
+
+    std::cout << "Sorted array: ";
+    printVector(data);
+
+    return 0;
+}
+// To compile and run (e.g., with g++):
+// g++ your_file_name.cpp -o quick_sort_cpp
+// ./quick_sort_cpp
+</code></pre>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fab fa-python"></i> Code Example (Python)</h2>
+            <pre><code class="language-python">def partition(arr, low, high):
+    pivot = arr[high]
+    i = low - 1
+
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+
+def quickSort(arr, low, high):
+    if low < high:
+        pi = partition(arr, low, high)
+
+        quickSort(arr, low, pi - 1)
+        quickSort(arr, pi + 1, high)
+
+# Example usage:
+if __name__ == "__main__":
+    data = [10, 7, 8, 9, 1, 5]
+    print("Unsorted array:", data)
+
+    quickSort(data, 0, len(data) - 1)
+
+    print("Sorted array:", data)
+
+# To run:
+# python your_file_name.py
+</code></pre>
+        </section>
+        <section class="visualization-container">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i> Visualization (Dynamic Input)</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="array-input-quick">Enter numbers (comma-separated):</label>
+                    <input type="text" id="array-input-quick" value="10,7,8,9,1,5">
+                </div>
+                <div class="control-group">
+                    <label for="speed-control-quick">Speed:</label>
+                    <input type="range" id="speed-control-quick" min="100" max="2000" value="500" step="100">
+                </div>
+                <button id="sort-button-quick">Sort</button>
+                <button id="randomize-button-quick">Randomize</button>
+                <button id="reset-button-quick">Reset</button>
+            </div>
+            <div id="main-visualization-area">
+                <!-- Main array bars will be generated here by JavaScript -->
+            </div>
+            <div id="aux-visualization-area">
+                <p>Current operation: (e.g., Partitioning, Swapping)</p>
+                <!-- Details about partitioning or swapping steps can appear here -->
+            </div>
+            <div id="steps-log">
+                <!-- Log of sorting steps will appear here -->
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; <span id="year-quick"></span> Algorithms & Design Patterns Guide</p>
+        <p class="footer-note">Quick Sort Page</p>
+    </footer>
+    <script src="../scripts/quick-sort-viz.js"></script>
+    <script>
+        document.getElementById('year-quick').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

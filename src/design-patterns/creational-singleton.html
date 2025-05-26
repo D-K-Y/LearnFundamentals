@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singleton Pattern</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1><i class="fas fa-user-shield"></i> Singleton Pattern</h1>
+        <p>Ensure a class has only one instance and provide a global point of access to it</p>
+    </header>
+    <nav class="sub-nav">
+        <a href="../index.html#design-patterns"><i class="fas fa-arrow-left"></i> Back to Design Patterns</a>
+        <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+    </nav>
+    <div class="container">
+        <section>
+            <h2 class="section-title"><i class="fas fa-lightbulb"></i> Concept</h2>
+            <p>The Singleton Pattern is a creational design pattern that ensures a class has only one instance and provides a global point of access to it. This is useful when exactly one object is needed to coordinate actions across the system, such as a database connection, a configuration manager, or a logger.</p>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-bullseye"></i> Purpose</h2>
+            <ul>
+                <li>Ensure that a class has only one instance.</li>
+                <li>Provide a global access point to this instance.</li>
+                <li>Control concurrent access to a shared resource.</li>
+            </ul>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-code"></i> Implementation (C++)</h2>
+            <p>In C++, a common way to implement a Singleton is by using a static member function that returns a reference or pointer to a static instance of the class. The constructor is typically made private or protected to prevent direct instantiation.</p>
+            <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;mutex&gt; // For thread-safe singleton
+
+class Singleton {
+private:
+    // Private constructor to prevent instantiation
+    Singleton(const std::string& value): value_(value) {
+        std::cout << "Singleton instance created with value: " << value_ << std::endl;
+    }
+
+    // Static member to hold the single instance
+    static Singleton* instance_;
+    std::string value_;
+
+    // For thread safety
+    static std::mutex mutex_;
+
+public:
+    // Delete copy constructor and assignment operator
+    Singleton(const Singleton &other) = delete;
+    void operator=(const Singleton &) = delete;
+
+    // Static method to get the instance
+    static Singleton* GetInstance(const std::string& value);
+
+    std::string GetValue() const {
+        return value_;
+    }
+
+    void DoSomething() const {
+        std::cout << "Singleton (" << this << ") doing something with value: " << value_ << std::endl;
+    }
+
+    // Optional: A method to clean up the singleton instance
+    static void DestroyInstance() {
+        std::lock_guard&lt;std::mutex&gt; lock(mutex_);
+        if (instance_ != nullptr) {
+            delete instance_;
+            instance_ = nullptr;
+            std::cout << "Singleton instance destroyed." << std::endl;
+        }
+    }
+};
+
+// Initialize static members
+Singleton* Singleton::instance_ = nullptr;
+std::mutex Singleton::mutex_;
+
+// Implementation of GetInstance
+Singleton* Singleton::GetInstance(const std::string& value) {
+    if (instance_ == nullptr) {
+        std::lock_guard&lt;std::mutex&gt; lock(mutex_);
+        if (instance_ == nullptr) {
+            instance_ = new Singleton(value);
+        }
+    }
+    return instance_;
+}
+
+// Example Usage in main:
+int main() {
+    std::cout << "Attempting to get Singleton instance s1..." << std::endl;
+    Singleton* s1 = Singleton::GetInstance("INITIAL_VALUE");
+    std::cout << "s1 address: " << s1 << ", s1 value: " << s1->GetValue() << std::endl;
+    s1->DoSomething();
+
+    std::cout << "\nAttempting to get Singleton instance s2..." << std::endl;
+    Singleton* s2 = Singleton::GetInstance("NEW_VALUE (this value will be ignored if instance exists)");
+    std::cout << "s2 address: " << s2 << ", s2 value: " << s2->GetValue() << std::endl;
+    s2->DoSomething();
+
+    if (s1 == s2) {
+        std::cout << "\ns1 and s2 point to the same instance. Singleton pattern is working." << std::endl;
+    } else {
+        std::cout << "\nError: s1 and s2 point to different instances. Singleton pattern failed." << std::endl;
+    }
+    
+    // Clean up the singleton instance before exiting
+    Singleton::DestroyInstance();
+
+    return 0;
+}
+
+// To compile and run (e.g., with g++):
+// g++ your_file_name.cpp -o singleton_cpp -pthread
+// ./singleton_cpp
+</code></pre>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fab fa-python"></i> Code Example (Python)</h2>
+            <pre><code class="language-python"># Singleton using __new__ method
+class SingletonNew:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(SingletonNew, cls).__new__(cls)
+            print(f"SingletonNew instance created by __new__ with id: {id(cls._instance)}")
+            cls._instance._initialized_once = False
+        return cls._instance
+
+    def __init__(self, value="Default Value"):
+        if not self._initialized_once:
+            self.value = value
+            print(f"SingletonNew instance ({id(self)}) initialized by __init__ with value: '{self.value}'")
+            self._initialized_once = True
+        else:
+            print(f"SingletonNew instance ({id(self)}) __init__ called again, but not re-initializing value. Current value: '{self.value}'")
+
+    def get_value(self):
+        return self.value
+
+    def set_value(self, value):
+        self.value = value
+        print(f"SingletonNew instance ({id(self)}) value set to: '{self.value}'")
+
+# Singleton using a Metaclass (more robust for controlling instantiation)
+class SingletonMeta(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+            print(f"{cls.__name__} instance created by metaclass with id: {id(instance)}")
+        else:
+            print(f"{cls.__name__} instance ({id(cls._instances[cls])}) already exists, returning it.")
+        return cls._instances[cls]
+
+class Logger(metaclass=SingletonMeta):
+    def __init__(self, file_name="log.txt"):
+        self.file_name = file_name
+        print(f"Logger instance ({id(self)}) initialized by __init__ with file: {self.file_name}")
+
+    def log(self, message):
+        print(f"Logger ({id(self)}) logging to {self.file_name}: {message}")
+
+# Example usage for Python Singletons:
+if __name__ == "__main__":
+    print("--- Singleton with __new__ ---")
+    s_new1 = SingletonNew("Initial Data")
+    print(f"s_new1 value: {s_new1.get_value()}, id: {id(s_new1)}")
+
+    s_new2 = SingletonNew("Second Call Data")
+    print(f"s_new2 value: {s_new2.get_value()}, id: {id(s_new2)}")
+    print(f"s_new1 is s_new2: {s_new1 is s_new2}")
+
+    s_new1.set_value("Updated Data from s_new1")
+    print(f"s_new2 value after s_new1 update: {s_new2.get_value()}")
+
+    print("\n--- Singleton with Metaclass (Logger) ---")
+    logger1 = Logger("app_log.txt")
+    logger1.log("This is the first log message from logger1.")
+
+    logger2 = Logger("another_log.txt")
+    logger2.log("This is a message from logger2 (should be same instance).")
+
+    print(f"logger1 is logger2: {logger1 is logger2}")
+    print(f"logger1 file: {logger1.file_name}, id: {id(logger1)}")
+    print(f"logger2 file: {logger2.file_name}, id: {id(logger2)}")
+
+# To run:
+# python your_file_name.py
+</code></pre>
+        </section>
+        <section>
+            <h2 class="section-title"><i class="fas fa-terminal"></i> Demonstration and Expected Output (C++)</h2>
+            <p>The C++ <code>main()</code> function in the "Implementation (C++)" section demonstrates the Singleton pattern. Here's a breakdown of what happens and the expected console output when compiled and run:</p>
+            <ol>
+                <li><strong>First <code>GetInstance</code> call:</strong>
+                    <ul>
+                        <li><code>Singleton* s1 = Singleton::GetInstance("INITIAL_VALUE");</code></li>
+                        <li>Since no instance exists, the <code>GetInstance</code> method creates a new <code>Singleton</code> object.</li>
+                        <li>The private constructor is called, printing "Singleton instance created with value: INITIAL_VALUE".</li>
+                        <li><code>s1</code> now points to this unique instance.</li>
+                    </ul>
+                </li>
+                <li><strong>Second <code>GetInstance</code> call:</strong>
+                    <ul>
+                        <li><code>Singleton* s2 = Singleton::GetInstance("NEW_VALUE (this value will be ignored if instance exists)");</code></li>
+                        <li>The <code>GetInstance</code> method is called again. This time, <code>instance_</code> is not <code>nullptr</code>.</li>
+                        <li>The existing instance (the one <code>s1</code> points to) is returned. The constructor is <strong>not</strong> called again, and the "NEW_VALUE" argument is effectively ignored for instantiation purposes.</li>
+                        <li><code>s2</code> now points to the same unique instance as <code>s1</code>.</li>
+                    </ul>
+                </li>
+                <li><strong>Verification:</strong>
+                    <ul>
+                        <li>The program prints the memory addresses of <code>s1</code> and <code>s2</code>. They should be identical.</li>
+                        <li>The values obtained via <code>s1->GetValue()</code> and <code>s2->GetValue()</code> will both be "INITIAL_VALUE" because they refer to the same object whose <code>value_</code> was set upon its first creation.</li>
+                        <li>The condition <code>s1 == s2</code> evaluates to true, confirming they are the same instance.</li>
+                    </ul>
+                </li>
+                <li><strong>Cleanup:</strong>
+                    <ul>
+                        <li><code>Singleton::DestroyInstance();</code> is called to deallocate the memory used by the singleton instance. This is important for avoiding memory leaks when using raw pointers.</li>
+                    </ul>
+                </li>
+            </ol>
+            <h3>Expected Console Output:</h3>
+            <div class="console-output" style="background:#222;color:#fff;padding:1em;border-radius:6px;font-family:monospace;">
+Attempting to get Singleton instance s1...
+Singleton instance created with value: INITIAL_VALUE
+s1 address: [some_memory_address], s1 value: INITIAL_VALUE
+Singleton ([some_memory_address]) doing something with value: INITIAL_VALUE
+
+Attempting to get Singleton instance s2...
+s2 address: [same_memory_address_as_s1], s2 value: INITIAL_VALUE
+Singleton ([same_memory_address_as_s1]) doing something with value: INITIAL_VALUE
+
+s1 and s2 point to the same instance. Singleton pattern is working.
+Singleton instance destroyed.
+            </div>
+            <p><em>Note: <code>[some_memory_address]</code> will be an actual memory address (e.g., <code>0x7ffee1c00580</code>) and will be the same for <code>s1</code> and <code>s2</code>.</em></p>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; <span id="year-singleton"></span> Algorithms & Design Patterns Guide</p>
+        <p class="footer-note">Singleton Pattern Page</p>
+    </footer>
+    <script>
+        document.getElementById('year-singleton').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
