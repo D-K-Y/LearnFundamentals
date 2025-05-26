@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijkstra's Algorithm</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .algo-header {
+            background: linear-gradient(90deg, #007bff 80%, #17a2b8 100%);
+            color: #fff;
+            padding: 2em 2em 1em 2em;
+            border-radius: 14px 14px 0 0;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 1em;
+        }
+        .algo-header i {
+            font-size: 2em;
+        }
+        .algo-content {
+            background: #f8f9fa;
+            border-radius: 0 0 14px 14px;
+            box-shadow: 0 2px 12px #0002;
+            padding: 2em;
+            margin-bottom: 2em;
+        }
+        .algo-section-title {
+            color: #007bff;
+            font-size: 1.3em;
+            margin-top: 1.5em;
+            margin-bottom: 0.7em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+        pre {
+            background: #222;
+            color: #fff;
+            border-radius: 8px;
+            padding: 1em;
+            overflow-x: auto;
+            margin: 1em 0;
+            font-size: 1em;
+        }
+        .visualization-container {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5em;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link i {
+            margin-right: 0.5em;
+        }
+        @media (max-width: 800px) {
+            .algo-header, .algo-content { padding: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="back-link" href="../index.html#popular-algorithms"><i class="fas fa-arrow-left"></i> Back to Algorithms</a>
+    </nav>
+    <div class="algo-header">
+        <i class="fas fa-route"></i>
+        <div>
+            <h1 style="margin:0;">Dijkstra's Algorithm</h1>
+            <div style="font-size:1.1em;">Find the shortest path in a weighted graph</div>
+        </div>
+    </div>
+    <div class="algo-content">
+        <div class="algo-section-title"><i class="fas fa-info-circle"></i> Overview</div>
+        <p>
+            Dijkstra's Algorithm is a classic algorithm for finding the shortest path from a starting node to all other nodes in a weighted graph with non-negative edge weights. It is widely used in routing and navigation systems.
+        </p>
+
+        <div class="algo-section-title"><i class="fas fa-list-ol"></i> How It Works</div>
+        <ol>
+            <li>Start with the source node and set its distance to 0. Set all other nodes' distances to infinity.</li>
+            <li>Mark all nodes as unvisited. Set the source as the current node.</li>
+            <li>For the current node, consider all its unvisited neighbors and calculate their tentative distances through the current node.</li>
+            <li>Once all neighbors are considered, mark the current node as visited. A visited node will not be checked again.</li>
+            <li>Select the unvisited node with the smallest tentative distance as the new current node and repeat.</li>
+            <li>Stop when all nodes have been visited or the shortest path to the target node is found.</li>
+        </ol>
+
+        <div class="algo-section-title"><i class="fas fa-eye"></i> Visualization</div>
+        <div class="visualization-container" style="max-width:600px;margin:2em auto;">
+            <div style="background:#f8f9fa;border-radius:12px;padding:1.2em 1em 0.5em 1em;box-shadow:0 2px 12px #0001;">
+                <div style="display:flex;align-items:center;gap:0.7em;margin-bottom:0.7em;">
+                    <span style="font-size:1.5em;color:#007bff;"><i class="fas fa-play-circle"></i></span>
+                    <span style="font-weight:bold;font-size:1.1em;">Step through Dijkstra's Algorithm</span>
+                </div>
+                <iframe 
+                    src="dijkstra-visual.html" 
+                    title="Dijkstra Visualization" 
+                    style="width:100%;min-height:410px;max-width:560px;border:none;border-radius:10px;box-shadow:0 2px 12px #0002;background:#fff;display:block;margin:auto;">
+                </iframe>
+                <div style="font-size:0.97em;color:#666;margin:0.7em 0 0.2em 0;text-align:center;">
+                    <span style="color:#007bff;font-weight:bold;">Instructions:</span>
+                    Click <b>Start</b> to initialize. Use <b>Next Step</b> to watch the algorithm visit nodes and build the shortest path.<br>
+                    <span style="color:#ffc107;">Yellow edges</span> show the current shortest path. <span style="color:#b2f2ff;">Blue nodes</span> are visited.
+                </div>
+            </div>
+        </div>
+
+        <div class="algo-section-title"><i class="fas fa-code"></i> Python Example</div>
+        <pre><code class="language-python">import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = [(0, start)]
+    while queue:
+        curr_dist, curr_node = heapq.heappop(queue)
+        if curr_dist > distances[curr_node]:
+            continue
+        for neighbor, weight in graph[curr_node]:
+            distance = curr_dist + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(queue, (distance, neighbor))
+    return distances
+
+# Example usage:
+graph = {
+    'A': [('B', 2), ('C', 5)],
+    'B': [('A', 2), ('C', 1), ('D', 4)],
+    'C': [('A', 5), ('B', 1), ('D', 1)],
+    'D': [('B', 4), ('C', 1)]
+}
+print(dijkstra(graph, 'A'))  # {'A': 0, 'B': 2, 'C': 3, 'D': 4}
+</code></pre>
+
+        <div class="algo-section-title"><i class="fas fa-lightbulb"></i> Key Points</div>
+        <ul>
+            <li>Works only with non-negative edge weights.</li>
+            <li>Time complexity: <b>O((V + E) log V)</b> with a min-heap (priority queue).</li>
+            <li>Used in GPS, network routing, and many pathfinding applications.</li>
+        </ul>
+    </div>
+    <footer>
+        <p>&copy; <span id="year-dijkstra"></span> Algorithms & Design Patterns Guide</p>
+        <p class="footer-note">Dijkstra's Algorithm Visualization</p>
+    </footer>
+    <script>
+        document.getElementById('year-dijkstra').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dijkstra Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin:0; background:#fff; }
+        .graph-svg { width:100%; height:320px; display:block; }
+        .node { stroke:#007bff; stroke-width:2; cursor:pointer; }
+        .node-label { font-family:Montserrat,sans-serif; font-size:1.1em; fill:#222; font-weight:bold; pointer-events:none; }
+        .edge-label { font-family:Nunito,sans-serif; font-size:0.95em; fill:#555; pointer-events:none; }
+        .edge { stroke:#bbb; stroke-width:3; }
+        .edge-path { stroke:#ffc107; stroke-width:5; }
+        .visited { fill: #b2f2ff !important; }
+        .active { stroke: #ffc107 !important; stroke-width: 4 !important; }
+        .controls {
+            text-align: center;
+            margin: 1em 0 0.5em 0;
+        }
+        .controls button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5em 1.2em;
+            font-size: 1em;
+            margin: 0 0.5em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .controls button:disabled {
+            background: #b0c4de;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+<div class="controls">
+    <button id="startBtn">Start</button>
+    <button id="nextBtn" disabled>Next Step</button>
+    <span id="status" style="margin-left:1em;color:#007bff;font-weight:bold;"></span>
+</div>
+<svg class="graph-svg" viewBox="0 0 400 300" id="graph">
+    <!-- Edges -->
+    <line x1="80" y1="150" x2="200" y2="60" class="edge"/>
+    <line x1="80" y1="150" x2="320" y2="80" class="edge"/>
+    <line x1="200" y1="60" x2="320" y2="80" class="edge"/>
+    <line x1="320" y1="80" x2="320" y2="220" class="edge"/>
+    <line x1="80" y1="150" x2="320" y2="220" class="edge"/>
+    <!-- Shortest path highlight: A -> B -> C -> D -->
+    <polyline points="80,150 200,60 320,80 320,220" class="edge-path" fill="none"/>
+    <!-- Nodes -->
+    <circle cx="80" cy="150" r="28" fill="#e3f2fd" class="node"/>
+    <circle cx="200" cy="60" r="28" fill="#e0f7fa" class="node"/>
+    <circle cx="320" cy="80" r="28" fill="#e3fcec" class="node"/>
+    <circle cx="320" cy="220" r="28" fill="#fff3cd" class="node"/>
+    <!-- Node labels -->
+    <text x="80" y="155" text-anchor="middle" class="node-label">A</text>
+    <text x="200" y="65" text-anchor="middle" class="node-label">B</text>
+    <text x="320" y="85" text-anchor="middle" class="node-label">C</text>
+    <text x="320" y="225" text-anchor="middle" class="node-label">D</text>
+    <!-- Edge weights -->
+    <text x="135" y="105" text-anchor="middle" class="edge-label">2</text>
+    <text x="200" y="155" text-anchor="middle" class="edge-label">5</text>
+    <text x="260" y="70" text-anchor="middle" class="edge-label">1</text>
+    <text x="320" y="150" text-anchor="middle" class="edge-label">1</text>
+    <text x="200" y="235" text-anchor="middle" class="edge-label">4</text>
+</svg>
+<script src="../scripts/dijkstra-visual.js"></script>
+</body>
+</html>
