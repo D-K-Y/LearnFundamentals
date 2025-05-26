@@ -113,7 +113,8 @@
         </div>
 
         <div class="algo-section-title"><i class="fas fa-code"></i> Python Example</div>
-        <pre><code class="language-python">import heapq
+        <div style="background:#f8f9fa;border-radius:12px;padding:1em 1em 0.5em 1em;box-shadow:0 2px 12px #0001;margin-bottom:1em;">
+            <pre id="code-block" style="margin-bottom:0.5em;"><code class="language-python">import heapq
 
 def dijkstra(graph, start):
     distances = {node: float('inf') for node in graph}
@@ -139,6 +140,14 @@ graph = {
 }
 print(dijkstra(graph, 'A'))  # {'A': 0, 'B': 2, 'C': 3, 'D': 4}
 </code></pre>
+            <button id="run-python-btn" style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:0.5em 1.2em;font-size:1em;cursor:pointer;margin-bottom:0.7em;">
+                <i class="fas fa-play"></i> Run Code
+            </button>
+            <div id="python-output" style="background:#222;color:#fff;border-radius:6px;padding:0.7em 1em;margin-top:0.5em;min-height:2em;font-family:monospace;font-size:1em;"></div>
+            <div style="font-size:0.95em;color:#888;margin-top:0.3em;">
+                Powered by <a href="https://pyodide.org/" target="_blank" style="color:#007bff;">Pyodide</a> (runs Python in your browser)
+            </div>
+        </div>
 
         <div class="algo-section-title"><i class="fas fa-lightbulb"></i> Key Points</div>
         <ul>
@@ -153,6 +162,46 @@ print(dijkstra(graph, 'A'))  # {'A': 0, 'B': 2, 'C': 3, 'D': 4}
     </footer>
     <script>
         document.getElementById('year-dijkstra').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+    <script>
+let pyodideReady = false;
+let pyodide = null;
+
+async function loadPyodideAndPackages() {
+    pyodide = await loadPyodide();
+    pyodideReady = true;
+}
+loadPyodideAndPackages();
+
+document.getElementById('run-python-btn').onclick = async function() {
+    const code = document.getElementById('code-block').innerText;
+    const outputDiv = document.getElementById('python-output');
+    outputDiv.textContent = "Running...";
+    if (!pyodideReady) {
+        outputDiv.textContent = "Loading Python runtime, please wait...";
+        await loadPyodideAndPackages();
+    }
+    try {
+        // Redirect stdout to capture print output
+        const wrapped = `
+import sys
+from io import StringIO
+_stdout = sys.stdout
+sys.stdout = StringIO()
+try:
+${code.split('\n').map(line => '    ' + line).join('\n')}
+    _result = sys.stdout.getvalue()
+finally:
+    sys.stdout = _stdout
+_result
+`;
+        let result = await pyodide.runPythonAsync(wrapped);
+        outputDiv.textContent = result.trim() === "" ? "(No output)" : result;
+    } catch (err) {
+        outputDiv.textContent = "Error: " + err;
+    }
+};
     </script>
 </body>
 </html>
