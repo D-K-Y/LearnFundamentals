@@ -5,38 +5,60 @@
     <title>Red-Black Tree Visualization</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { margin:0; background:#fff; }
+        body { margin:0; background:#fff; font-family: Arial, sans-serif; }
         .tree-controls {
             text-align: center;
-            margin: 1em 0 0.5em 0;
+            margin: 0; /* Removed top margin */
+            padding: 0.7em; /* Increased padding slightly */
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
         }
         .tree-controls input, .tree-controls button {
-            font-size: 1em;
+            font-size: 0.95em; /* Slightly smaller font */
             padding: 0.4em 0.8em;
             border-radius: 6px;
             border: 1px solid #ccc;
             margin: 0 0.3em;
         }
         .tree-controls button {
-            background: #007bff; /* Changed from red to blue */
+            background: #007bff;
             color: #fff;
             border: none;
             cursor: pointer;
             transition: background 0.2s;
         }
-        .tree-controls button:hover:not(:disabled) { /* Added hover state */
-            background: #0056b3; /* Darker blue on hover */
+        .tree-controls button:hover:not(:disabled) {
+            background: #0056b3;
         }
         .tree-controls button:disabled {
             background: #b0c4de;
             cursor: not-allowed;
         }
-        .tree-svg { width:100%; height:350px; display:block; }
-        .node { stroke:#343a40; stroke-width:2; }
-        .node-red { fill:#dc3545; stroke:#343a40; } /* Node colors remain for tree itself */
-        .node-black { fill:#343a40; stroke:#343a40; }
-        .node-label { font-family:Montserrat,sans-serif; font-size:1.1em; fill:#fff; font-weight:bold; pointer-events:none; }
-        .edge { stroke:#888; stroke-width:3; }
+        .tree-svg-container {
+            width: 100%;
+            height: 340px; /* Adjusted height */
+            overflow: auto; 
+        }
+        .tree-svg {
+            display: block;
+            margin: auto;
+            min-width: 600px; 
+            min-height: 330px; /* Adjusted min-height */
+        }
+        .node { stroke:#343a40; stroke-width:1.5; }
+        .node-red { fill:#dc3545; }
+        .node-black { fill:#343a40; }
+        .node-label {
+            font-family: Montserrat, sans-serif;
+            font-size: 0.8em; 
+            fill: #fff;
+            font-weight: bold;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .edge { stroke:#6c757d; stroke-width:2; } /* Lighter edge color */
     </style>
 </head>
 <body>
@@ -45,7 +67,9 @@
     <button id="insert-btn">Insert</button>
     <button id="reset-btn">Reset</button>
 </div>
-<svg class="tree-svg" viewBox="0 0 600 350" id="tree-svg"></svg>
-<script src="red-black-tree-visual.js"></script>
+<div class="tree-svg-container">
+    <svg class="tree-svg" viewBox="0 0 600 350" id="tree-svg" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+<script src="../scripts/red-black-tree-visual.js"></script>
 </body>
 </html>
