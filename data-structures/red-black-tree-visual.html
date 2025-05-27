@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Red-Black Tree Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin:0; background:#fff; }
+        .tree-controls {
+            text-align: center;
+            margin: 1em 0 0.5em 0;
+        }
+        .tree-controls input, .tree-controls button {
+            font-size: 1em;
+            padding: 0.4em 0.8em;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin: 0 0.3em;
+        }
+        .tree-controls button {
+            background: #007bff; /* Changed from red to blue */
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .tree-controls button:hover:not(:disabled) { /* Added hover state */
+            background: #0056b3; /* Darker blue on hover */
+        }
+        .tree-controls button:disabled {
+            background: #b0c4de;
+            cursor: not-allowed;
+        }
+        .tree-svg { width:100%; height:350px; display:block; }
+        .node { stroke:#343a40; stroke-width:2; }
+        .node-red { fill:#dc3545; stroke:#343a40; } /* Node colors remain for tree itself */
+        .node-black { fill:#343a40; stroke:#343a40; }
+        .node-label { font-family:Montserrat,sans-serif; font-size:1.1em; fill:#fff; font-weight:bold; pointer-events:none; }
+        .edge { stroke:#888; stroke-width:3; }
+    </style>
+</head>
+<body>
+<div class="tree-controls">
+    <input type="number" id="insert-value" placeholder="Value" />
+    <button id="insert-btn">Insert</button>
+    <button id="reset-btn">Reset</button>
+</div>
+<svg class="tree-svg" viewBox="0 0 600 350" id="tree-svg"></svg>
+<script src="red-black-tree-visual.js"></script>
+</body>
+</html>

@@ -60,7 +60,7 @@
         </section>
         <section>
             <h2 class="section-title">Code Example (C++)</h2>
-            <pre><code class="language-cpp">#include &lt;iostream&gt;
+            <pre id="cpp-code-block"><code class="language-cpp">#include &lt;iostream&gt;
 #include &lt;vector&gt;
 #include &lt;algorithm&gt; // For std::swap
 
@@ -108,17 +108,23 @@ int main() {
     std::cout &lt;&lt; "Sorted array 2: ";
     printVector(data2);
 
-
     return 0;
 }
 // To compile and run (e.g., with g++):
 // g++ your_file_name.cpp -o bubble_sort_cpp
 // ./bubble_sort_cpp
 </code></pre>
+            <button class="run-cpp-btn" style="background:#28a745;color:#fff;border:none;border-radius:6px;padding:0.5em 1.2em;font-size:1em;cursor:pointer;margin-bottom:0.7em;">
+                <i class="fas fa-play"></i> Run C++ Code
+            </button>
+            <div class="cpp-output" style="background:#222;color:#fff;border-radius:6px;padding:0.7em 1em;margin-top:0.5em;min-height:2em;font-family:monospace;font-size:1em;box-shadow:0 2px 8px #0001;"></div>
+            <div style="font-size:0.95em;color:#888;margin-top:0.3em;">
+                Powered by <a href="https://www.onlinegdb.com/online_c++_compiler" target="_blank" style="color:#28a745;">OnlineGDB (external)</a>
+            </div>
         </section>
         <section>
             <h2 class="section-title">Code Example (Python)</h2>
-            <pre><code class="language-python">def bubble_sort(arr):
+            <pre id="python-code-block"><code class="language-python">def bubble_sort(arr):
     n = len(arr)
     # Traverse through all array elements
     for i in range(n - 1):
@@ -151,6 +157,13 @@ if __name__ == "__main__":
 # To run:
 # python your_file_name.py
 </code></pre>
+            <button class="run-python-btn" style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:0.5em 1.2em;font-size:1em;cursor:pointer;margin-bottom:0.7em;">
+                <i class="fas fa-play"></i> Run Python Code
+            </button>
+            <div class="python-output" style="background:#222;color:#fff;border-radius:6px;padding:0.7em 1em;margin-top:0.5em;min-height:2em;font-family:monospace;font-size:1em;box-shadow:0 2px 8px #0001;"></div>
+            <div style="font-size:0.95em;color:#888;margin-top:0.3em;">
+                Powered by <a href="https://pyodide.org/" target="_blank" style="color:#007bff;">Pyodide</a>
+            </div>
         </section>
         <section>
             <h2 class="section-title">Visualization (Dynamic Input)</h2>
@@ -173,8 +186,68 @@ if __name__ == "__main__":
          <p class="footer-note">Bubble Sort Page</p>
     </footer>
     <script src="../scripts/bubble-sort-viz.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
     <script>
         document.getElementById('year-bubble').textContent = new Date().getFullYear();
+
+        // --- Python Run Code ---
+        let pyodideReady = false;
+        let pyodide = null;
+        async function loadPyodideAndPackages() {
+            pyodide = await loadPyodide();
+            pyodideReady = true;
+        }
+        loadPyodideAndPackages();
+
+        document.querySelector('.run-python-btn').onclick = async function() {
+            const code = document.getElementById('python-code-block').innerText;
+            const outputDiv = document.querySelector('.python-output');
+            outputDiv.textContent = "Running...";
+            if (!pyodideReady) {
+                outputDiv.textContent = "Loading Python runtime, please wait...";
+                await loadPyodideAndPackages();
+            }
+            try {
+                // Redirect stdout to capture print output
+                const wrapped = `
+import sys
+from io import StringIO
+_stdout = sys.stdout
+sys.stdout = StringIO()
+try:
+${code.split('\n').map(line => '    ' + line).join('\n')}
+    _result = sys.stdout.getvalue()
+finally:
+    sys.stdout = _stdout
+_result
+`;
+                let result = await pyodide.runPythonAsync(wrapped);
+                outputDiv.textContent = result.trim() === "" ? "(No output)" : result;
+            } catch (err) {
+                outputDiv.textContent = "Error: " + err;
+            }
+        };
+
+        // --- C++ Run Code (opens code in OnlineGDB for demo) ---
+        document.querySelector('.run-cpp-btn').onclick = function() {
+            const code = document.getElementById('cpp-code-block').innerText;
+            // Decode HTML entities for < and > and &
+            const decoded = code.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+            // OnlineGDB accepts code via URL parameter for prefill (read-only), but to run/edit, user must paste manually.
+            // We'll open OnlineGDB and copy code to clipboard for user convenience.
+            const onlineGDBUrl = "https://www.onlinegdb.com/online_c++_compiler";
+            // Try to copy code to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(decoded).then(() => {
+                    document.querySelector('.cpp-output').textContent = "Code copied to clipboard! Paste it in OnlineGDB (external site).";
+                }, () => {
+                    document.querySelector('.cpp-output').textContent = "Opened OnlineGDB (external site). Copy code manually if needed.";
+                });
+            } else {
+                document.querySelector('.cpp-output').textContent = "Opened OnlineGDB (external site). Copy code manually if needed.";
+            }
+            window.open(onlineGDBUrl, '_blank');
+        };
     </script>
 </body>
 </html>

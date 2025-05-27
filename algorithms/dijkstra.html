@@ -8,34 +8,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .algo-header {
-            background: linear-gradient(90deg, #007bff 80%, #17a2b8 100%);
+        body {
+            background: #f4f8fb;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2em 1em 1em 1em;
+        }
+        .algo-hero {
+            text-align: center;
+            padding: 3rem 2rem 2rem 2rem;
+            background: linear-gradient(120deg, #007bff 0%, #17a2b8 100%);
+            border-radius: 16px;
+            margin-bottom: 2.5rem;
             color: #fff;
-            padding: 2em 2em 1em 2em;
-            border-radius: 14px 14px 0 0;
-            margin-bottom: 0;
-            display: flex;
-            align-items: center;
-            gap: 1em;
+            box-shadow: 0 8px 32px rgba(0,123,255,0.08);
+            position: relative;
+            overflow: hidden;
         }
-        .algo-header i {
-            font-size: 2em;
+        .algo-hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.3em;
+            letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
         }
-        .algo-content {
-            background: #f8f9fa;
-            border-radius: 0 0 14px 14px;
-            box-shadow: 0 2px 12px #0002;
-            padding: 2em;
-            margin-bottom: 2em;
+        .algo-hero p {
+            font-size: 1.2em;
+            color: #e3f2fd;
         }
-        .algo-section-title {
-            color: #007bff;
-            font-size: 1.3em;
-            margin-top: 1.5em;
-            margin-bottom: 0.7em;
+        .section-title {
             display: flex;
             align-items: center;
             gap: 0.5em;
+            font-size: 1.3em;
+            color: #007bff;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+        .algo-card {
+            background: #f8f9fa;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0001;
+            padding: 2em;
+            margin-bottom: 2em;
         }
         pre {
             background: #222;
@@ -50,70 +67,99 @@
             text-align: center;
             margin: 2em 0;
         }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1.5em;
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
+        .run-btn {
+            background:#007bff;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            padding:0.5em 1.2em;
+            font-size:1em;
+            cursor:pointer;
+            margin-bottom:0.7em;
+            box-shadow:0 2px 8px #007bff22;
         }
-        .back-link i {
-            margin-right: 0.5em;
+        .run-btn i {
+            margin-right: 0.4em;
         }
-        @media (max-width: 800px) {
-            .algo-header, .algo-content { padding: 1em; }
+        .output-box {
+            background:#222;
+            color:#fff;
+            border-radius:6px;
+            padding:0.7em 1em;
+            margin-top:0.5em;
+            min-height:2em;
+            font-family:monospace;
+            font-size:1em;
+            box-shadow:0 2px 8px #0001;
+        }
+        .powered-by {
+            font-size:0.95em;
+            color:#888;
+            margin-top:0.3em;
+            text-align:right;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 0.5em; }
+            .algo-hero { padding: 2em 0.5em 1.5em 0.5em; }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <a class="back-link" href="../index.html#popular-algorithms"><i class="fas fa-arrow-left"></i> Back to Algorithms</a>
-    </nav>
-    <div class="algo-header">
-        <i class="fas fa-route"></i>
-        <div>
-            <h1 style="margin:0;">Dijkstra's Algorithm</h1>
-            <div style="font-size:1.1em;">Find the shortest path in a weighted graph</div>
+    <div class="container">
+        <div class="algo-hero">
+            <h1><i class="fas fa-route"></i> Dijkstra's Algorithm</h1>
+            <p>Find the shortest path in a weighted graph using a greedy approach.<br>
+            <span style="font-size:0.95em;color:#b3e5fc;">Efficient, optimal, and widely used in navigation and networks.</span>
+            </p>
         </div>
-    </div>
-    <div class="algo-content">
-        <div class="algo-section-title"><i class="fas fa-info-circle"></i> Overview</div>
-        <p>
-            Dijkstra's Algorithm is a classic algorithm for finding the shortest path from a starting node to all other nodes in a weighted graph with non-negative edge weights. It is widely used in routing and navigation systems.
-        </p>
 
-        <div class="algo-section-title"><i class="fas fa-list-ol"></i> How It Works</div>
-        <ol>
-            <li>Start with the source node and set its distance to 0. Set all other nodes' distances to infinity.</li>
-            <li>Mark all nodes as unvisited. Set the source as the current node.</li>
-            <li>For the current node, consider all its unvisited neighbors and calculate their tentative distances through the current node.</li>
-            <li>Once all neighbors are considered, mark the current node as visited. A visited node will not be checked again.</li>
-            <li>Select the unvisited node with the smallest tentative distance as the new current node and repeat.</li>
-            <li>Stop when all nodes have been visited or the shortest path to the target node is found.</li>
-        </ol>
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-info-circle"></i> Overview</div>
+            <p>
+                Dijkstra's Algorithm computes the shortest path from a starting node to all other nodes in a weighted graph with non-negative edge weights. It is fundamental in computer science and is used in GPS, network routing, and many pathfinding applications.
+            </p>
+        </div>
 
-        <div class="algo-section-title"><i class="fas fa-eye"></i> Visualization</div>
-        <div class="visualization-container" style="max-width:600px;margin:2em auto;">
-            <div style="background:#f8f9fa;border-radius:12px;padding:1.2em 1em 0.5em 1em;box-shadow:0 2px 12px #0001;">
-                <div style="display:flex;align-items:center;gap:0.7em;margin-bottom:0.7em;">
-                    <span style="font-size:1.5em;color:#007bff;"><i class="fas fa-play-circle"></i></span>
-                    <span style="font-weight:bold;font-size:1.1em;">Step through Dijkstra's Algorithm</span>
-                </div>
-                <iframe 
-                    src="dijkstra-visual.html" 
-                    title="Dijkstra Visualization" 
-                    style="width:100%;min-height:410px;max-width:560px;border:none;border-radius:10px;box-shadow:0 2px 12px #0002;background:#fff;display:block;margin:auto;">
-                </iframe>
-                <div style="font-size:0.97em;color:#666;margin:0.7em 0 0.2em 0;text-align:center;">
-                    <span style="color:#007bff;font-weight:bold;">Instructions:</span>
-                    Click <b>Start</b> to initialize. Use <b>Next Step</b> to watch the algorithm visit nodes and build the shortest path.<br>
-                    <span style="color:#ffc107;">Yellow edges</span> show the current shortest path. <span style="color:#b2f2ff;">Blue nodes</span> are visited.
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-list-ol"></i> How It Works</div>
+            <ol>
+                <li>Start with the source node and set its distance to 0. Set all other nodes' distances to infinity.</li>
+                <li>Mark all nodes as unvisited. Set the source as the current node.</li>
+                <li>For the current node, consider all its unvisited neighbors and calculate their tentative distances through the current node.</li>
+                <li>Once all neighbors are considered, mark the current node as visited. A visited node will not be checked again.</li>
+                <li>Select the unvisited node with the smallest tentative distance as the new current node and repeat.</li>
+                <li>Stop when all nodes have been visited or the shortest path to the target node is found.</li>
+            </ol>
+        </div>
+
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-eye"></i> Visualization</div>
+            <div class="visualization-container" style="max-width:600px;margin:2em auto;">
+                <div style="background:#f8f9fa;border-radius:12px;padding:1.2em 1em 0.5em 1em;box-shadow:0 2px 12px #0001;">
+                    <div style="display:flex;align-items:center;gap:0.7em;margin-bottom:0.7em;">
+                        <span style="font-size:1.5em;color:#007bff;"><i class="fas fa-play-circle"></i></span>
+                        <span style="font-weight:bold;font-size:1.1em;">Step through Dijkstra's Algorithm</span>
+                    </div>
+                    <iframe 
+                        src="dijkstra-visual.html" 
+                        title="Dijkstra Visualization" 
+                        style="width:100%;min-height:410px;max-width:560px;border:none;border-radius:10px;box-shadow:0 2px 12px #0002;background:#fff;display:block;margin:auto;">
+                    </iframe>
+                    <div style="font-size:0.97em;color:#666;margin:0.7em 0 0.2em 0;text-align:center;">
+                        <span style="color:#007bff;font-weight:bold;">Instructions:</span>
+                        Click <b>Start</b> to initialize. Use <b>Next Step</b> to watch the algorithm visit nodes and build the shortest path.<br>
+                        <span style="color:#ffc107;">Yellow edges</span> show the current shortest path. <span style="color:#b2f2ff;">Blue nodes</span> are visited.
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="algo-section-title"><i class="fas fa-code"></i> Python Example</div>
-        <div style="background:#f8f9fa;border-radius:12px;padding:1em 1em 0.5em 1em;box-shadow:0 2px 12px #0001;margin-bottom:1em;">
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-code"></i> Python Example</div>
+            <div style="display:flex;align-items:center;gap:0.7em;margin-bottom:0.7em;">
+                <span style="font-size:1.3em;color:#007bff;"><i class="fab fa-python"></i></span>
+                <span style="font-weight:bold;font-size:1.08em;">Try the code below in your browser!</span>
+            </div>
             <pre id="code-block" style="margin-bottom:0.5em;"><code class="language-python">import heapq
 
 def dijkstra(graph, start):
@@ -140,51 +186,68 @@ graph = {
 }
 print(dijkstra(graph, 'A'))  # {'A': 0, 'B': 2, 'C': 3, 'D': 4}
 </code></pre>
-            <button id="run-python-btn" style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:0.5em 1.2em;font-size:1em;cursor:pointer;margin-bottom:0.7em;">
+            <button id="run-python-btn" class="run-btn">
                 <i class="fas fa-play"></i> Run Code
             </button>
-            <div id="python-output" style="background:#222;color:#fff;border-radius:6px;padding:0.7em 1em;margin-top:0.5em;min-height:2em;font-family:monospace;font-size:1em;"></div>
-            <div style="font-size:0.95em;color:#888;margin-top:0.3em;">
-                Powered by <a href="https://pyodide.org/" target="_blank" style="color:#007bff;">Pyodide</a> (runs Python in your browser)
+            <div id="python-output" class="output-box"></div>
+            <div class="powered-by">
+                Powered by <a href="https://pyodide.org/" target="_blank" style="color:#007bff;">Pyodide</a>
             </div>
         </div>
 
-        <div class="algo-section-title"><i class="fas fa-lightbulb"></i> Key Points</div>
-        <ul>
-            <li>Works only with non-negative edge weights.</li>
-            <li>Time complexity: <b>O((V + E) log V)</b> with a min-heap (priority queue).</li>
-            <li>Used in GPS, network routing, and many pathfinding applications.</li>
-        </ul>
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-lightbulb"></i> Key Points</div>
+            <ul>
+                <li>Works only with non-negative edge weights.</li>
+                <li>Time complexity: <b>O((V + E) log V)</b> with a min-heap (priority queue).</li>
+                <li>Used in GPS, network routing, and many pathfinding applications.</li>
+            </ul>
+        </div>
     </div>
-    <footer>
-        <p>&copy; <span id="year-dijkstra"></span> Algorithms & Design Patterns Guide</p>
-        <p class="footer-note">Dijkstra's Algorithm Visualization</p>
+    <footer style="margin-top:3em;text-align:center;padding:2em 0;background:#f8f9fa;border-radius:14px 14px 0 0;">
+        <div style="font-size:1.1em;font-weight:bold;margin-bottom:0.5em;">
+            Made by Deepak Kumar Yadav
+        </div>
+        <div style="margin-bottom:0.5em;">
+            <a href="https://www.linkedin.com/in/deepak-k-y/" target="_blank" style="color:#0077b5;text-decoration:none;font-size:1.2em;margin:0 1em;">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://github.com/D-K-Y" target="_blank" style="color:#24292e;text-decoration:none;font-size:1.2em;margin:0 1em;">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://deepakyadav.dev" target="_blank" style="color:#28a745;text-decoration:none;font-size:1.2em;margin:0 1em;">
+                <i class="fas fa-globe"></i> Website
+            </a>
+        </div>
+        <div style="color:#888;font-size:0.95em;">
+            &copy; <span id="year-main"></span> Algorithms & Design Patterns Guide
+        </div>
     </footer>
-    <script>
-        document.getElementById('year-dijkstra').textContent = new Date().getFullYear();
-    </script>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
     <script>
-let pyodideReady = false;
-let pyodide = null;
+    document.getElementById('year-main').textContent = new Date().getFullYear();
 
-async function loadPyodideAndPackages() {
-    pyodide = await loadPyodide();
-    pyodideReady = true;
-}
-loadPyodideAndPackages();
+    // Pyodide runner with print capturing
+    let pyodideReady = false;
+    let pyodide = null;
 
-document.getElementById('run-python-btn').onclick = async function() {
-    const code = document.getElementById('code-block').innerText;
-    const outputDiv = document.getElementById('python-output');
-    outputDiv.textContent = "Running...";
-    if (!pyodideReady) {
-        outputDiv.textContent = "Loading Python runtime, please wait...";
-        await loadPyodideAndPackages();
+    async function loadPyodideAndPackages() {
+        pyodide = await loadPyodide();
+        pyodideReady = true;
     }
-    try {
-        // Redirect stdout to capture print output
-        const wrapped = `
+    loadPyodideAndPackages();
+
+    document.getElementById('run-python-btn').onclick = async function() {
+        const code = document.getElementById('code-block').innerText;
+        const outputDiv = document.getElementById('python-output');
+        outputDiv.textContent = "Running...";
+        if (!pyodideReady) {
+            outputDiv.textContent = "Loading Python runtime, please wait...";
+            await loadPyodideAndPackages();
+        }
+        try {
+            // Redirect stdout to capture print output
+            const wrapped = `
 import sys
 from io import StringIO
 _stdout = sys.stdout
@@ -196,12 +259,12 @@ finally:
     sys.stdout = _stdout
 _result
 `;
-        let result = await pyodide.runPythonAsync(wrapped);
-        outputDiv.textContent = result.trim() === "" ? "(No output)" : result;
-    } catch (err) {
-        outputDiv.textContent = "Error: " + err;
-    }
-};
+            let result = await pyodide.runPythonAsync(wrapped);
+            outputDiv.textContent = result.trim() === "" ? "(No output)" : result;
+        } catch (err) {
+            outputDiv.textContent = "Error: " + err;
+        }
+    };
     </script>
 </body>
 </html>

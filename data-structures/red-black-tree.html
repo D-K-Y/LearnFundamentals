@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red-Black Tree</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { background: #f4f8fb; }
+        .container { max-width: 900px; margin: 0 auto; padding: 2em 1em 1em 1em; }
+        .algo-hero {
+            text-align: center;
+            padding: 3rem 2rem 2rem 2rem;
+            background: linear-gradient(120deg, #007bff 0%, #17a2b8 100%);
+            border-radius: 16px;
+            margin-bottom: 2.5rem;
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(0,123,255,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        .algo-hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 0.3em;
+            letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .algo-hero p {
+            font-size: 1.2em;
+            color: #e3f2fd;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5em;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.08em;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-size: 1.3em;
+            color: #007bff;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+        .algo-card {
+            background: #f8f9fa;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0001;
+            padding: 2em;
+            margin-bottom: 2em;
+        }
+        pre {
+            background: #222;
+            color: #fff;
+            border-radius: 8px;
+            padding: 1em;
+            overflow-x: auto;
+            margin: 1em 0;
+            font-size: 1em;
+        }
+        .visualization-container {
+            text-align: center;
+            margin: 2em 0;
+        }
+        .run-btn {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5em 1.2em;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 0.7em;
+            box-shadow: 0 2px 8px #007bff22;
+            transition: background 0.2s;
+        }
+        .run-btn[disabled], .run-btn:disabled {
+            background: #b0c4de;
+            cursor: not-allowed;
+        }
+        .run-btn i { margin-right: 0.4em; }
+        .output-box {
+            background: #222;
+            color: #fff;
+            border-radius: 6px;
+            padding: 0.7em 1em;
+            margin-top: 0.5em;
+            min-height: 2em;
+            font-family: monospace;
+            font-size: 1em;
+            box-shadow: 0 2px 8px #0001;
+        }
+        .powered-by {
+            font-size: 0.95em;
+            color: #888;
+            margin-top: 0.3em;
+            text-align: right;
+        }
+        .visualization-container .visualization-controls input,
+        .visualization-container .visualization-controls button {
+            font-size: 1em;
+            padding: 0.4em 0.8em;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin: 0 0.3em;
+        }
+        .visualization-container .visualization-controls button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .visualization-container .visualization-controls button:disabled {
+            background: #b0c4de;
+            cursor: not-allowed;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 0.5em; }
+            .algo-hero { padding: 2em 0.5em 1.5em 0.5em; }
+        }
+    </style>
+</head>
+<body>
+        <header>
+        <h1><i class="fas fa-code-branch"></i> Red-Black Tree Sort</h1>
+        <p>
+            A self-balancing binary search tree with guaranteed O(log n) operations.<br>
+            <span style="font-size:0.95em;color:#e3f2fd;">Used in STL map/set, Java TreeMap, and more.</span>
+        </p>
+    </header>
+    <nav class="sub-nav">
+        <a href="../index.html#popular-algorithms"><i class="fas fa-arrow-left"></i> Back to Popular Algorithms</a>
+        <a href="../index.html"><i class="fas fa-home"></i> Main Page</a>
+    </nav>
+    <div class="container">
+        <div class="algo-hero">
+            <h1><i class="fas fa-tree"></i> Concept</h1>
+            <p>
+                A <b>Red-Black Tree</b> is a self-balancing binary search tree where each node contains an extra bit for color (red or black). The tree balances itself after insertions and deletions to ensure that the longest path from the root to a leaf is no more than twice as long as the shortest path, guaranteeing O(log n) time for search, insert, and delete operations.
+            </p>
+        </div>
+
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-list-ul"></i> Characteristics</div>
+            <ul>
+                <li>Each node is either <b>red</b> or <b>black</b>.</li>
+                <li>The root is always <b>black</b>.</li>
+                <li>No two red nodes can be adjacent (parent-child).</li>
+                <li>Every path from a node to its descendant NULL nodes has the same number of black nodes.</li>
+                <li>Ensures O(log n) height for n nodes.</li>
+            </ul>
+        </div>
+
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-eye"></i> Visualization (Dynamic)</div>
+            <div class="visualization-container" style="max-width:600px;margin:2em auto;">
+                <div style="background:#f8f9fa;border-radius:12px;padding:1.2em 1em 0.5em 1em;box-shadow:0 2px 12px #0001;">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:0.7em;margin-bottom:0.7em;"> {/* Added justify-content:center */}
+                        <span style="font-size:1.5em;color:#007bff;"><i class="fas fa-play-circle"></i></span>
+                        <span style="font-weight:bold;font-size:1.1em;">Insert values to see the Red-Black Tree grow</span>
+                    </div>
+                    <iframe 
+                        src="red-black-tree-visual.html" 
+                        title="Red-Black Tree Visualization" 
+                        style="width:100%;min-height:370px;max-width:560px;border:none;border-radius:10px;box-shadow:0 2px 12px #0002;background:#fff;display:block;margin:auto;">
+                    </iframe>
+                    <div style="font-size:0.97em;color:#666;margin:0.7em 0 0.2em 0;text-align:center;">
+                        <span style="color:#dc3545;font-weight:bold;">Red nodes</span> are red, <span style="color:#343a40;font-weight:bold;">black nodes</span> are black.<br>
+                        Insert numbers and watch balancing and coloring in action.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="algo-card">
+            <div class="section-title"><i class="fab fa-cuttlefish"></i> Code Example (C++)</div>
+            <pre id="rb-cpp-code"><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+
+enum Color { RED, BLACK };
+
+struct Node {
+    int data;
+    Color color;
+    Node *left, *right;
+    Node(int data, Color color) : data(data), color(color), left(nullptr), right(nullptr) {}
+};
+
+void inorder(Node* node) {
+    if (node) {
+        inorder(node->left);
+        cout &lt;&lt; node->data &lt;&lt; (node->color == RED ? "(R) " : "(B) ");
+        inorder(node->right);
+    }
+}
+
+int main() {
+    Node* root = new Node(10, BLACK);
+    root->left = new Node(5, RED);
+    root->right = new Node(20, RED);
+    root->left->left = new Node(2, BLACK);
+    root->left->right = new Node(8, BLACK);
+    inorder(root); // Output: 2(B) 5(R) 8(B) 10(B) 20(R)
+    return 0;
+}
+</code></pre>
+            <button id="run-cpp-btn" class="run-btn">
+                <i class="fas fa-play"></i> Run C++ Code
+            </button>
+            <div id="cpp-output" class="output-box"></div>
+            <div class="powered-by">
+                Powered by <a href="https://www.onlinegdb.com/online_c++_compiler" target="_blank" style="color:#28a745;">OnlineGDB (external)</a>
+            </div>
+        </div>
+
+        <div class="algo-card">
+            <div class="section-title"><i class="fab fa-python"></i> Code Example (Python)</div>
+            <pre id="rb-python-code"><code class="language-python"># Simple Red-Black Tree Node and Insert Example (no balancing for brevity)
+class Node:
+    def __init__(self, data, color="R"):
+        self.data = data
+        self.color = color  # "R" or "B"
+        self.left = None
+        self.right = None
+
+def inorder(node):
+    if node:
+        inorder(node.left)
+        print(f"{node.data}({node.color})", end=" ")
+        inorder(node.right)
+
+# Example usage:
+root = Node(10, "B")
+root.left = Node(5, "R")
+root.right = Node(20, "R")
+root.left.left = Node(2, "B")
+root.left.right = Node(8, "B")
+inorder(root)  # Output: 2(B) 5(R) 8(B) 10(B) 20(R)
+</code></pre>
+            <button id="run-python-btn" class="run-btn">
+                <i class="fas fa-play"></i> Run Python Code
+            </button>
+            <div id="python-output" class="output-box"></div>
+            <div class="powered-by">
+                Powered by <a href="https://pyodide.org/" target="_blank" style="color:#007bff;">Pyodide</a>
+            </div>
+        </div>
+
+        <div class="algo-card">
+            <div class="section-title"><i class="fas fa-star"></i> Key Points</div>
+            <ul>
+                <li>Self-balancing BST with O(log n) insert, delete, and search.</li>
+                <li>Used in many standard libraries (C++ STL map/set, Java TreeMap, etc).</li>
+                <li>Guarantees that the longest path is no more than twice the shortest.</li>
+                <li>Red-Black properties ensure balance with minimal overhead.</li>
+            </ul>
+        </div>
+    </div>
+    <footer style="margin-top:3em;text-align:center;padding:2em 0;background:#f8f9fa;border-radius:14px 14px 0 0;">
+        <div style="font-size:1.1em;font-weight:bold;margin-bottom:0.5em;">
+            Made by Deepak Kumar Yadav
+        </div>
+        <div style="margin-bottom:0.5em;">
+            <a href="https://www.linkedin.com/in/deepak-k-y/" target="_blank" style="color:#0077b5;text-decoration:none;font-size:1.2em;margin:0 1em;">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://github.com/D-K-Y" target="_blank" style="color:#24292e;text-decoration:none;font-size:1.2em;margin:0 1em;">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://deepakyadav.dev" target="_blank" style="color:#28a745;text-decoration:none;font-size:1.2em;margin:0 1em;">
+                <i class="fas fa-globe"></i> Website
+            </a>
+        </div>
+        <div style="color:#888;font-size:0.95em;">
+            &copy; <span id="year-rbt"></span> Algorithms & Data Structures Guide
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+    <script>
+    document.getElementById('year-rbt').textContent = new Date().getFullYear();
+
+    // Pyodide runner with print capturing
+    let pyodideReady = false;
+    let pyodide = null;
+
+    async function loadPyodideAndPackages() {
+        pyodide = await loadPyodide();
+        pyodideReady = true;
+    }
+    loadPyodideAndPackages();
+
+    document.getElementById('run-python-btn').onclick = async function() {
+        const code = document.getElementById('rb-python-code').innerText;
+        const outputDiv = document.getElementById('python-output');
+        outputDiv.textContent = "Running...";
+        if (!pyodideReady) {
+            outputDiv.textContent = "Loading Python runtime, please wait...";
+            await loadPyodideAndPackages();
+        }
+        try {
+            // Redirect stdout to capture print output
+            const wrapped = `
+import sys
+from io import StringIO
+_stdout = sys.stdout
+sys.stdout = StringIO()
+try:
+${code.split('\n').map(line => '    ' + line).join('\n')}
+    _result = sys.stdout.getvalue()
+finally:
+    sys.stdout = _stdout
+_result
+`;
+            let result = await pyodide.runPythonAsync(wrapped);
+            outputDiv.textContent = result.trim() === "" ? "(No output)" : result;
+        } catch (err) {
+            outputDiv.textContent = "Error: " + err;
+        }
+    };
+
+    // C++ Run Code (opens code in OnlineGDB and copies code to clipboard)
+    document.getElementById('run-cpp-btn').onclick = function() {
+        const code = document.getElementById('rb-cpp-code').innerText
+            .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+        const onlineGDBUrl = "https://www.onlinegdb.com/online_c++_compiler";
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(() => {
+                document.getElementById('cpp-output').textContent = "Code copied to clipboard! Paste it in OnlineGDB (external site).";
+            }, () => {
+                document.getElementById('cpp-output').textContent = "Opened OnlineGDB (external site). Copy code manually if needed.";
+            });
+        } else {
+            document.getElementById('cpp-output').textContent = "Opened OnlineGDB (external site). Copy code manually if needed.";
+        }
+        window.open(onlineGDBUrl, '_blank');
+    };
+    </script>
+</body>
+</html>
